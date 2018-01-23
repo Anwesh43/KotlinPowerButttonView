@@ -92,11 +92,36 @@ class PowerButtonView(ctx:Context):View(ctx) {
         fun startUpdating(startcb: () -> Unit) {
             if(scaleDir == 0f) {
                 scaleDir = 1-2*prevScale
+                startcb()
             }
         }
         fun executeCb(cb:(Float)->Unit,i:Int) {
             if(i>=0 && i< scales.size) {
                 cb(scales[i])
+            }
+        }
+    }
+    data class Renderer(var view:PowerButtonView,var time:Int = 0) {
+        val animator = Animator(view)
+        var powerButton:PowerButton?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                powerButton = PowerButton(w/2,h/2,h/3)
+            }
+            canvas.drawColor(Color.parseColor("#212121"))
+            powerButton?.draw(canvas,paint)
+            time++
+            animator.animate {
+                powerButton?.update {
+                    animator.stop()
+                }
+            }
+        }
+        fun handleTap() {
+            powerButton?.startUpdating {
+                animator.start()
             }
         }
     }
