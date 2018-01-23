@@ -45,14 +45,19 @@ class PowerButtonView(ctx:Context):View(ctx) {
         }
     }
     data class PowerButton(var x:Float,var y:Float,var w:Float) {
+        val state = PowerButtonState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            canvas.rotate(45f)
+            state.executeCb({
+                canvas.rotate(45f*it)
+            },1)
             for(i in 0..1) {
                 canvas.save()
-                canvas.rotate(i*180f)
                 val path = Path()
+                state.executeCb({
+                    canvas.rotate(i*180f*it)
+                },0)
                 path.moveTo(0f,0f)
                 path.lineTo(0f,w)
                 path.lineTo(-w/2,0f)
@@ -62,10 +67,10 @@ class PowerButtonView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update(stopcb:(Float)->Unit) {
-
+            state.update(stopcb)
         }
         fun startUpdating(startcb:()->Unit) {
-
+            state.startUpdating(startcb)
         }
     }
     data class PowerButtonState(var j:Int = 0,var dir:Int = 1,var scaleDir:Float = 0f,var prevScale:Float = 0f) {
@@ -89,9 +94,9 @@ class PowerButtonView(ctx:Context):View(ctx) {
                 scaleDir = 1-2*prevScale
             }
         }
-        fun executeCb(cb:(Float)->Unit) {
-            if(j>=0 && j< scales.size) {
-                cb(scales[j])
+        fun executeCb(cb:(Float)->Unit,i:Int) {
+            if(i>=0 && i< scales.size) {
+                cb(scales[i])
             }
         }
     }
