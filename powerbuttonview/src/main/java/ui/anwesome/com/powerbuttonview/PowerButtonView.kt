@@ -53,7 +53,7 @@ class PowerButtonView(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(x,y)
             state.executeCb({
-                canvas.rotate(30f*it)
+                canvas.rotate(15f*it)
             },1)
             for(i in 0..1) {
                 canvas.save()
@@ -62,7 +62,7 @@ class PowerButtonView(ctx:Context):View(ctx) {
                     canvas.rotate(i*180f*it)
                 },0)
                 path.moveTo(0f,0f)
-                path.lineTo(0f,-w)
+                path.lineTo(w/10,-w)
                 path.lineTo(-w/2,0f)
                 canvas.drawPath(path,paint)
                 canvas.restore()
