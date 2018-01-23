@@ -65,7 +65,34 @@ class PowerButtonView(ctx:Context):View(ctx) {
 
         }
         fun startUpdating(startcb:()->Unit) {
-            
+
+        }
+    }
+    data class PowerButtonState(var j:Int = 0,var dir:Int = 1,var scaleDir:Float = 0f,var prevScale:Float = 0f) {
+        val scales:Array<Float> = arrayOf(0f,0f)
+        fun update(stopcb:(Float)->Unit) {
+            scales[j] += scaleDir
+            if(Math.abs(scales[j]-prevScale) > 1) {
+                scales[j] = prevScale + scaleDir
+                j += dir
+                if(j == scales.size || j == -1) {
+                    scaleDir = 0f
+                    dir *= -1
+                    j+=dir
+                    prevScale = scales[j]
+                    stopcb(prevScale)
+                }
+            }
+        }
+        fun startUpdating(startcb: () -> Unit) {
+            if(scaleDir == 0f) {
+                scaleDir = 1-2*prevScale
+            }
+        }
+        fun executeCb(cb:(Float)->Unit) {
+            if(j>=0 && j< scales.size) {
+                cb(scales[j])
+            }
         }
     }
 }
