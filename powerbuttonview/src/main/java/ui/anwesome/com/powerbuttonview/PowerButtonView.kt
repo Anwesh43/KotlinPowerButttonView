@@ -49,6 +49,7 @@ class PowerButtonView(ctx:Context):View(ctx) {
     data class PowerButton(var x:Float,var y:Float,var w:Float) {
         val state = PowerButtonState()
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.WHITE
             canvas.save()
             canvas.translate(x,y)
             state.executeCb({
