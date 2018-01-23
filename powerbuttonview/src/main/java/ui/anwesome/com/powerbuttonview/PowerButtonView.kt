@@ -3,6 +3,7 @@ package ui.anwesome.com.powerbuttonview
 /**
  * Created by anweshmishra on 23/01/18.
  */
+import android.app.Activity
 import android.content.*
 import android.graphics.*
 import android.view.*
@@ -124,6 +125,14 @@ class PowerButtonView(ctx:Context):View(ctx) {
             powerButton?.startUpdating {
                 animator.start()
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity):PowerButtonView {
+            val view = PowerButtonView(activity)
+            val size = DimensionController.getDimensions(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
+            return view
         }
     }
 }
